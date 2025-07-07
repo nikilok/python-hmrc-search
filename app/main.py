@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query, HTTPException
 from typing import List
 from app.models import CompanySearchResult
-from app.services import search_companies
+from app.services.search import search_companies
 
 app = FastAPI()
 

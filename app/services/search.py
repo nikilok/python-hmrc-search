@@ -5,7 +5,7 @@ from typing import List
 from app.models import CompanySearchResult
 
 # Load CSV into memory at startup
-CSV_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)), "csv", "2025-07-03-Worker.csv")
+CSV_PATH = os.path.join(os.path.dirname(os.path.dirname(__file__)),"..", "csv", "2025-07-03-Worker.csv")
 skilled_worker_data_current = pd.read_csv(CSV_PATH)
 
 def get_fuzzy_score(company_name: str, company: str) -> int:
