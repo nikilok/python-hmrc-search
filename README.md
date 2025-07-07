@@ -10,3 +10,15 @@
 
 - start for development - `poetry run fastapi dev app/main.py`
 - start for production - `poetry run fastapi run app/main.py`
+
+## Format
+
+`poetry run black .`
+
+## Sort imports
+
+`poetry run isort .`
+
+## Lint
+
+`poetry run flake8 .`

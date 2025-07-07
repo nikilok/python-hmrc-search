@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class CompanySearchResult(BaseModel):
     Organisation_Name: str
     Town_City: str
