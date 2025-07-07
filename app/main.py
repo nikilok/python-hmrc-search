@@ -5,10 +5,6 @@ from app.services.search import search_companies
 
 app = FastAPI()
 
-@app.get("/")
-def read_root():
-    return {"message": "Hello, FastAPI!"}
-
 @app.get("/search", response_model=List[CompanySearchResult])
 def search_company(company_name: str = Query(..., description="Company name to search for")) -> List[CompanySearchResult]:
     if len(company_name.strip()) < 3:
