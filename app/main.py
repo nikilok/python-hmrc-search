@@ -13,5 +13,4 @@ def read_root():
 def search_company(company_name: str = Query(..., description="Company name to search for")) -> List[CompanySearchResult]:
     if len(company_name.strip()) < 3:
         raise HTTPException(status_code=400, detail="company_name must be at least 3 characters long.")
-    results = search_companies(company_name)
-    return results
+    return search_companies(company_name)
