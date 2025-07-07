@@ -11,7 +11,10 @@ requires-python = "^3.9"
 package-mode = false
 dependencies = [
     "fastapi[standard] (>=0.116.0,<0.117.0)",
-    "uvicorn (>=0.35.0,<0.36.0)"
+    "uvicorn (>=0.35.0,<0.36.0)",
+    "pandas",
+    "fuzzywuzzy",
+    "python-Levenshtein"
 ]
 
 
