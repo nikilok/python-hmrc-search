@@ -8,5 +8,5 @@
 
 ## Steps to start
 
-- start - `poetry run fastapi dev app/main.py`
-- start for production - `poetry run uvicorn app.main:app --reload`
+- start for development - `poetry run fastapi dev app/main.py`
+- start for production - `poetry run fastapi run app/main.py`
