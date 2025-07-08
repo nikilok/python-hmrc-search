@@ -33,4 +33,7 @@ automatic swagger docs at http://localhost:8000/docs
 
 ## Support for MCP server to interact with any AI agent
 
+You can add the MCP server with the url http://localhost:8000/mcp to any chat client that supports MCP servers like Claude, VSCode, ChatGPT and more.
+Once you allow the chat client to use the MCP server you can converse with it in natural language.
+
 <img width="484" alt="image" src="https://github.com/user-attachments/assets/47de2bda-a80c-448c-a920-92f4a2bd3f5f" />
