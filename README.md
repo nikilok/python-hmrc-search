@@ -30,3 +30,7 @@
 
 automatic swagger docs at http://localhost:8000/docs
 <img width="1647" alt="image" src="https://github.com/user-attachments/assets/0e79bfd9-6cbc-454e-8b82-476e60ed887f" />
+
+## Support for MCP server to interact with any AI agent
+
+<img width="484" alt="image" src="https://github.com/user-attachments/assets/47de2bda-a80c-448c-a920-92f4a2bd3f5f" />
