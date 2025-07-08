@@ -3,8 +3,10 @@
 ## Install
 
 - set up an enviornment with pip or conda and activate it.
+  `conda create --name fast-api-3.12 python=3.12`
+  `conda activate fast-api-3.12`
 - install poetry the dependency manager `curl -sSL https://install.python-poetry.org | python3 -`
-- install the packages `poetry install` or update them if installed using `poetry update`
+- install the packages `poetry install --no-root` or update them if installed using `poetry update`
 
 ## Steps to start
 
@@ -28,4 +30,3 @@
 
 automatic swagger docs at http://localhost:8000/docs
 <img width="1647" alt="image" src="https://github.com/user-attachments/assets/0e79bfd9-6cbc-454e-8b82-476e60ed887f" />
-

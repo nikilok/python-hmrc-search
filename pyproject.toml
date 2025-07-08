@@ -7,14 +7,15 @@ authors = [
 ]
 license = {text = "MIT"}
 readme = "README.md"
-requires-python = "^3.9"
+requires-python = "^3.12"
 package-mode = false
 dependencies = [
     "fastapi[standard] (>=0.116.0,<0.117.0)",
     "uvicorn (>=0.35.0,<0.36.0)",
     "pandas",
     "fuzzywuzzy",
-    "python-Levenshtein"
+    "python-Levenshtein",
+    "fastapi-mcp (>=0.3.4,<0.4.0)"
 ]
 
 

@@ -13,8 +13,6 @@ ENV/
 env.bak/
 venv.bak/
 
-# Poetry
-
 # VS Code
 .vscode/
 
