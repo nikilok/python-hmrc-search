@@ -1,0 +1,37 @@
+name: Python CI
+
+on:
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Install dependencies
+        run: |
+          poetry install --no-interaction --no-root
+
+      - name: Run black (formatting check)
+        run: |
+          poetry run black --check .
+
+      - name: Run isort (import order check)
+        run: |
+          poetry run isort --check-only .
+
+      - name: Run flake8 (linting)
+        run: |
+          poetry run flake8 .
