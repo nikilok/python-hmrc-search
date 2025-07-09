@@ -14,9 +14,7 @@ mcp.mount()
 
 @app.get("/search", response_model=List[CompanySearchResult])
 @lessthan_x(
-    3,
-    arg_name="company_name",
-    message="company_name must be at least 3 characters long.",
+    3,arg_name="company_name",message="company_name must be at least 3 characters long.",
 )
 def search_company(
     company_name: str = Query(..., description="Company name to search for")
