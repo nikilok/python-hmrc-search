@@ -3,6 +3,7 @@ from typing import List
 
 import pandas as pd
 from fuzzywuzzy import fuzz
+from pandas import Series
 
 from app.models import CompanySearchResult
 
@@ -49,7 +50,7 @@ def search_companies(
     Returns:
         List[CompanySearchResult]: List of matching companies as Pydantic models.
     """
-    scores = skilled_worker_data_current["Organisation Name"].apply(
+    scores: Series[int] = skilled_worker_data_current["Organisation Name"].apply(
         lambda company: get_fuzzy_score(company_name, company)
     )
     matching_mask = scores >= threshold
