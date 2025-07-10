@@ -35,3 +35,7 @@ jobs:
       - name: Run flake8 (linting)
         run: |
           poetry run flake8 .
+
+      - name: Run pytest (testing)
+        run: |
+          poetry run pytest
