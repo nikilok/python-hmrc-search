@@ -16,12 +16,17 @@ def mock_data():
         }
     )
 
+
 # Fixture to patch skilled_worker_data_current and set up side effects
 @pytest.fixture
 def setup_mock_skilled_worker_data_current(mock_data):
-    with patch("app.services.search.skilled_worker_data_current") as mock_skilled_worker_data_current:
+    with patch(
+        "app.services.search.skilled_worker_data_current"
+    ) as mock_skilled_worker_data_current:
         mock_skilled_worker_data_current.__getitem__.side_effect = mock_data.__getitem__
-        mock_skilled_worker_data_current.loc.__getitem__.side_effect = mock_data.loc.__getitem__
+        mock_skilled_worker_data_current.loc.__getitem__.side_effect = (
+            mock_data.loc.__getitem__
+        )
         yield mock_skilled_worker_data_current
 
 
@@ -42,11 +47,18 @@ def test_no_match(setup_mock_skilled_worker_data_current):
 
 @pytest.fixture
 def setup_mock_skilled_worker_data_current_nan():
-    mock_data = pd.DataFrame({"Organisation Name": [None], "Town/City": [None], "County": [None]})
-    with patch("app.services.search.skilled_worker_data_current") as mock_skilled_worker_data_current:
+    mock_data = pd.DataFrame(
+        {"Organisation Name": [None], "Town/City": [None], "County": [None]}
+    )
+    with patch(
+        "app.services.search.skilled_worker_data_current"
+    ) as mock_skilled_worker_data_current:
         mock_skilled_worker_data_current.__getitem__.side_effect = mock_data.__getitem__
-        mock_skilled_worker_data_current.loc.__getitem__.side_effect = mock_data.loc.__getitem__
+        mock_skilled_worker_data_current.loc.__getitem__.side_effect = (
+            mock_data.loc.__getitem__
+        )
         yield mock_skilled_worker_data_current
+
 
 def test_nan_handling(setup_mock_skilled_worker_data_current_nan):
     results = search_companies("anything", threshold=0)
