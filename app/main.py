@@ -1,12 +1,12 @@
 from typing import List
 
 from fastapi import FastAPI, Query
-from fastapi_mcp import FastApiMCP
 from fastapi.responses import StreamingResponse
+from fastapi_mcp import FastApiMCP
 
 from app.models import CompanySearchResult
-from app.services.search import search_companies
 from app.services.ai_investment import investment_agent
+from app.services.search import search_companies
 from app.utils import lessthan_x
 
 app = FastAPI()
@@ -42,26 +42,28 @@ async def get_investment_analysis(
         """Async wrapper for the investment analysis generator"""
         try:
             # Use the investment_agent function which returns a proper generator
-            from app.services.ai_investment import investment_agent
+            # from app.services.ai_investment import investment_agent
+
             analysis_generator = investment_agent(company_name)
-            
+
             # Yield from the generator
             for chunk in analysis_generator:
                 if chunk:  # Only yield non-empty chunks
                     yield str(chunk)
-                    
+
         except Exception as error:
             yield f"Error during analysis: {str(error)}\n"
             yield "Please try again or contact support.\n"
-    
+
     # Return StreamingResponse
     return StreamingResponse(
-        async_investment_stream(), 
+        async_investment_stream(),
         media_type="text/plain",
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
-        }
+        },
     )
+
 
 mcp.setup_server()

@@ -1,22 +1,27 @@
 import os
-from dotenv import load_dotenv
+
 from agno.agent import Agent
 from agno.models.xai import xAI
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.yfinance import YFinanceTools
+from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Verify xAI API key is available
-xai_api_key = os.getenv("OPENAI_API_KEY")  
+xai_api_key = os.getenv("OPENAI_API_KEY")
 if not xai_api_key:
-    raise ValueError("OPENAI_API_KEY environment variable is required. Please set it in your .env file.")
+    raise ValueError(
+        "OPENAI_API_KEY environment variable is required. Please set it in your .env file."
+    )
 
 # Get model name from environment variables
 llm_model = os.getenv("XAI_MODEL")
 if not llm_model:
-    raise ValueError("XAI_MODEL environment variable is required. Please set it in your .env file.")
+    raise ValueError(
+        "XAI_MODEL environment variable is required. Please set it in your .env file."
+    )
 print(f"Using LLM model: {llm_model}")
 
 # Agent 1: Market Research Agent - Uses web search to gather market news and trends
@@ -29,10 +34,10 @@ market_research_agent = Agent(
         "Always cite sources and provide summaries of key articles or reports",
         "Keep tool calls simple and avoid complex JSON structures",
         "Be precise with search queries",
-        "If tool calls fail, provide analysis based on general knowledge"
+        "If tool calls fail, provide analysis based on general knowledge",
     ],
     markdown=True,
-    show_tool_calls=False,  
+    show_tool_calls=False,
 )
 
 # Agent 2: Financial Data Agent - Retrieves quantitative financial data using YFinance
@@ -52,18 +57,21 @@ financial_data_agent = Agent(
         "Present financial data in tables for clarity and include historical trends where relevant",
         "Use precise stock symbols and avoid ambiguous queries",
         "Keep tool calls simple and properly formatted",
-        "If tool calls fail, provide analysis based on general knowledge"
+        "If tool calls fail, provide analysis based on general knowledge",
     ],
     markdown=True,
-    show_tool_calls=False, 
+    show_tool_calls=False,
 )
 
-# Agent 3: Investment Analysis Agent - Analyzes data from other agents to provide insights and recommendations
+# Agent 3: Investment Analysis Agent - Analyzes data from other
+# agents to provide insights and recommendations
 investment_analysis_agent = Agent(
     name="Investment Analysis Agent",
-    role="Analyze market research and financial data to provide investment insights, risks, and recommendations",
+    role="Analyze market research and financial data to provide investment insights,"
+    " risks, and recommendations",
     model=xAI(id=llm_model),
-    instructions="Synthesize information from team members, evaluate risks, and suggest buy/sell/hold recommendations with reasoning",
+    instructions="Synthesize information from team members, evaluate risks, and "
+    "suggest buy/sell/hold recommendations with reasoning",
     markdown=True,
 )
 
@@ -75,48 +83,53 @@ investment_team = Agent(
         "Coordinate between agents to gather comprehensive data",
         "Ensure responses are well-structured with sections for research, data, and analysis",
         "Always include sources and use tables for data",
-        "Keep tool calls simple and avoid complex JSON structures"
+        "Keep tool calls simple and avoid complex JSON structures",
     ],
     markdown=True,
     show_tool_calls=False,
 )
+
 
 def investment_agent(company_name: str):
     """
     Investment analysis using multi-agent approach.
     Returns a generator for streaming responses.
     """
+
     def generate_streaming_analysis():
         """Generate streaming analysis using the investment team"""
         try:
             yield f"🔍 Starting comprehensive investment analysis for {company_name}...\n\n"
-            
+
             # Use the run method to get the complete response
             response = investment_team.run(
-                f"Provide a detailed investment analysis for {company_name} stock, including market outlook, financial performance, and recommendations."
+                f"Provide a detailed investment analysis for {company_name} stock, including market outlook, financial performance, and recommendations."  # noqa: E501
             )
-            
+
             # Extract and stream the content
-            if hasattr(response, 'content') and response.content:
+            if hasattr(response, "content") and response.content:
                 content = response.content
                 # Stream in chunks for better user experience
                 chunk_size = 150
                 for i in range(0, len(content), chunk_size):
-                    chunk = content[i:i+chunk_size]
+                    chunk = content[i: i + chunk_size]
                     yield chunk
             else:
                 yield f"Analysis completed for {company_name}"
-                
+
         except Exception as e:
             yield f"❌ Error during analysis: {str(e)}\n"
             yield "🔄 Attempting simplified analysis...\n"
-            
+
             try:
                 # Fallback to simple analysis
                 simplified_response = investment_analysis_agent.run(
-                    f"Provide a basic investment analysis for {company_name} based on general knowledge."
+                    f"Provide a basic investment analysis for {company_name} based on general knowledge."  # noqa: E501
                 )
-                if hasattr(simplified_response, 'content') and simplified_response.content:
+                if (
+                    hasattr(simplified_response, "content")
+                    and simplified_response.content
+                ):
                     yield simplified_response.content
                 else:
                     yield f"Basic analysis completed for {company_name}"
@@ -124,6 +137,7 @@ def investment_agent(company_name: str):
                 yield f"Unable to complete analysis: {fallback_error}\n"
 
     return generate_streaming_analysis()
+
 
 # To test the code through the command line instead of FastAPI
 if __name__ == "__main__":
@@ -136,7 +150,9 @@ if __name__ == "__main__":
         print("Example: python ai_investment.py TSLA")
         sys.exit(1)
 
-    company_name = " ".join(sys.argv[1:])  # Join all arguments in case company name has spaces
+    company_name = " ".join(
+        sys.argv[1:]
+    )  # Join all arguments in case company name has spaces
     print(f"Starting investment analysis for: {company_name}")
     print("=" * 50)
     print("Note: Using simplified approach to avoid JSON parsing issues")
