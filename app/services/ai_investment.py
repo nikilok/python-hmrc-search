@@ -112,7 +112,7 @@ def investment_agent(company_name: str):
                 # Stream in chunks for better user experience
                 chunk_size = 150
                 for i in range(0, len(content), chunk_size):
-                    chunk = content[i: i + chunk_size]
+                    chunk = content[i : i + chunk_size]  # noqa : E203
                     yield chunk
             else:
                 yield f"Analysis completed for {company_name}"
