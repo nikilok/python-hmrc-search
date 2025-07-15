@@ -29,7 +29,9 @@ def search_company(
 
 @app.get("/investment-analysis")
 async def get_investment_analysis(
-    ticker_symbol: str = Query(..., description="Stock ticker symbol to analyze for investment")
+    ticker_symbol: str = Query(
+        ..., description="Stock ticker symbol to analyze for investment"
+    )
 ):
     """
     Stream AI-powered investment analysis for a given stock ticker.

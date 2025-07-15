@@ -5,19 +5,16 @@ from agno.models.xai import xAI
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.yfinance import YFinanceTools
 from dotenv import load_dotenv
+
 from app.utils import validate_env_variables
 
 # Load environment variables from .env file
 load_dotenv()
 
 # Validate all required environment variables
-_, xai_model_s, xai_model_m, xai_model_l, xai_model_xl = validate_env_variables([
-    "OPENAI_API_KEY",
-    "XAI_MODEL_S",
-    "XAI_MODEL_M",
-    "XAI_MODEL_L",
-    "XAI_MODEL_XL"
-])
+_, xai_model_s, xai_model_m, xai_model_l, xai_model_xl = validate_env_variables(
+    ["OPENAI_API_KEY", "XAI_MODEL_S", "XAI_MODEL_M", "XAI_MODEL_L", "XAI_MODEL_XL"]
+)
 
 # Agent 1: Market Research Agent - Uses web search to gather market news and trends
 market_research_agent = Agent(
@@ -137,10 +134,11 @@ def investment_agent(ticker_symbol: str):
 # To test the code through the command line instead of FastAPI
 if __name__ == "__main__":
     import sys
-    import os
-    
+
     # Add the project root to Python path for imports
-    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    project_root = os.path.dirname(
+        os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    )
     sys.path.insert(0, project_root)
     import sys
 
