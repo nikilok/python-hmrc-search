@@ -29,7 +29,7 @@ market_research_agent = Agent(
         "If tool calls fail, provide analysis based on general knowledge",
     ],
     markdown=True,
-    show_tool_calls=False,
+    show_tool_calls=True,
 )
 
 # Agent 2: Financial Data Agent - Retrieves quantitative financial data using YFinance
@@ -52,7 +52,7 @@ financial_data_agent = Agent(
         "If tool calls fail, provide analysis based on general knowledge",
     ],
     markdown=True,
-    show_tool_calls=False,
+    show_tool_calls=True,
 )
 
 # Agent 3: Investment Analysis Agent - Analyzes data from other
@@ -65,6 +65,7 @@ investment_analysis_agent = Agent(
     instructions="Synthesize information from team members, evaluate risks, and "
     "suggest buy/sell/hold recommendations with reasoning",
     markdown=True,
+    show_tool_calls=True
 )
 
 # Create the main Investment Team Agent that coordinates the specialized agents
@@ -144,22 +145,22 @@ if __name__ == "__main__":
 
     # Check if company name is provided as command line argument
     if len(sys.argv) < 2:
-        print("Usage: python ai_investment.py <company_name>")
-        print("Example: python ai_investment.py Tesla")
-        print("Example: python ai_investment.py TSLA")
+        print("Usage: python -m app.services.ai_investment <stock ticker>")
+        print("Example: python -m app.services.ai_investment NVDA")
+        print("Example: python -m app.services.ai_investment TSLA")
         sys.exit(1)
 
-    company_name = " ".join(
+    stock_ticker = " ".join(
         sys.argv[1:]
     )  # Join all arguments in case company name has spaces
-    print(f"Starting investment analysis for: {company_name}")
+    print(f"Starting investment analysis for: {stock_ticker}")
     print("=" * 50)
     print("Note: Using simplified approach to avoid JSON parsing issues")
     print("=" * 50)
 
     try:
         # Run the investment analysis
-        analysis_gen = investment_agent(company_name)
+        analysis_gen = investment_agent(stock_ticker)
         for chunk in analysis_gen:
             print(chunk, end="")
         print("\n" + "=" * 50)
