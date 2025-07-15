@@ -29,14 +29,11 @@ def search_company(
 
 @app.get("/investment-analysis")
 async def get_investment_analysis(
-    company_name: str = Query(..., description="Company name to analyze for investment")
+    ticker_symbol: str = Query(..., description="Stock ticker symbol to analyze for investment")
 ):
     """
-    Stream AI-powered investment analysis for a given company.
+    Stream AI-powered investment analysis for a given stock ticker.
     """
-    # Validate input length (similar to @lessthan_x decorator)
-    if len(company_name) < 3:
-        return {"error": "company_name must be at least 3 characters long."}
 
     async def async_investment_stream():
         """Async wrapper for the investment analysis generator"""
@@ -44,7 +41,7 @@ async def get_investment_analysis(
             # Use the investment_agent function which returns a proper generator
             # from app.services.ai_investment import investment_agent
 
-            analysis_generator = investment_agent(company_name)
+            analysis_generator = investment_agent(ticker_symbol)
 
             # Yield from the generator
             for chunk in analysis_generator:

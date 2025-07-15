@@ -1,7 +1,34 @@
+import os
 import inspect
 from functools import wraps
+from typing import List, Tuple
 
 from fastapi import HTTPException
+
+
+def validate_env_variables(env_var_names: List[str]) -> Tuple[str, ...]:
+    """
+    Validate that multiple environment variables are set and return their values.
+
+    Args:
+        env_var_names (List[str]): List of environment variable names to check
+
+    Returns:
+        Tuple[str, ...]: Tuple of environment variable values in the same order as input
+
+    Raises:
+        ValueError: If any environment variable is not set
+    """
+    values = []
+    for var_name in env_var_names:
+        value = os.getenv(var_name)
+        if not value:
+            raise ValueError(
+                f"{var_name} environment variable is required. Please set it in your .env file."  # noqa: E501
+            )
+        values.append(value)
+
+    return tuple(values)
 
 
 def lessthan_x(x: int, arg_name=None, message="Input is too short."):
