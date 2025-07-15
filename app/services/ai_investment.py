@@ -5,30 +5,25 @@ from agno.models.xai import xAI
 from agno.tools.duckduckgo import DuckDuckGoTools
 from agno.tools.yfinance import YFinanceTools
 from dotenv import load_dotenv
+from app.utils import validate_env_variables
 
 # Load environment variables from .env file
 load_dotenv()
 
-# Verify xAI API key is available
-xai_api_key = os.getenv("OPENAI_API_KEY")
-if not xai_api_key:
-    raise ValueError(
-        "OPENAI_API_KEY environment variable is required. Please set it in your .env file."
-    )
-
-# Get model name from environment variables
-llm_model = os.getenv("XAI_MODEL")
-if not llm_model:
-    raise ValueError(
-        "XAI_MODEL environment variable is required. Please set it in your .env file."
-    )
-print(f"Using LLM model: {llm_model}")
+# Validate all required environment variables
+_, xai_model_s, xai_model_m, xai_model_l, xai_model_xl = validate_env_variables([
+    "OPENAI_API_KEY",
+    "XAI_MODEL_S",
+    "XAI_MODEL_M",
+    "XAI_MODEL_L",
+    "XAI_MODEL_XL"
+])
 
 # Agent 1: Market Research Agent - Uses web search to gather market news and trends
 market_research_agent = Agent(
     name="Market Research Agent",
     role="Gather latest market news, trends, and qualitative information from the web",
-    model=xAI(id=llm_model),
+    model=xAI(id=xai_model_s),
     tools=[DuckDuckGoTools()],
     instructions=[
         "Always cite sources and provide summaries of key articles or reports",
@@ -44,7 +39,7 @@ market_research_agent = Agent(
 financial_data_agent = Agent(
     name="Financial Data Agent",
     role="Fetch stock prices, analyst recommendations, company info, and financial metrics",
-    model=xAI(id=llm_model),
+    model=xAI(id=xai_model_m),
     tools=[
         YFinanceTools(
             stock_price=True,
@@ -69,7 +64,7 @@ investment_analysis_agent = Agent(
     name="Investment Analysis Agent",
     role="Analyze market research and financial data to provide investment insights,"
     " risks, and recommendations",
-    model=xAI(id=llm_model),
+    model=xAI(id=xai_model_xl),
     instructions="Synthesize information from team members, evaluate risks, and "
     "suggest buy/sell/hold recommendations with reasoning",
     markdown=True,
@@ -78,7 +73,7 @@ investment_analysis_agent = Agent(
 # Create the main Investment Team Agent that coordinates the specialized agents
 investment_team = Agent(
     team=[market_research_agent, financial_data_agent, investment_analysis_agent],
-    model=xAI(id=llm_model),
+    model=xAI(id=xai_model_l),
     instructions=[
         "Coordinate between agents to gather comprehensive data",
         "Ensure responses are well-structured with sections for research, data, and analysis",
@@ -90,7 +85,7 @@ investment_team = Agent(
 )
 
 
-def investment_agent(company_name: str):
+def investment_agent(ticker_symbol: str):
     """
     Investment analysis using multi-agent approach.
     Returns a generator for streaming responses.
@@ -99,11 +94,11 @@ def investment_agent(company_name: str):
     def generate_streaming_analysis():
         """Generate streaming analysis using the investment team"""
         try:
-            yield f"🔍 Starting comprehensive investment analysis for {company_name}...\n\n"
+            yield f"🔍 Starting comprehensive investment analysis for {ticker_symbol}...\n\n"
 
             # Use the run method to get the complete response
             response = investment_team.run(
-                f"Provide a detailed investment analysis for {company_name} stock, including market outlook, financial performance, and recommendations."  # noqa: E501
+                f"Provide a detailed investment analysis for {ticker_symbol} stock, including market outlook, financial performance, and recommendations."  # noqa: E501
             )
 
             # Extract and stream the content
@@ -115,7 +110,7 @@ def investment_agent(company_name: str):
                     chunk = content[i : i + chunk_size]  # noqa : E203
                     yield chunk
             else:
-                yield f"Analysis completed for {company_name}"
+                yield f"Analysis completed for {ticker_symbol}"
 
         except Exception as e:
             yield f"❌ Error during analysis: {str(e)}\n"
@@ -124,7 +119,7 @@ def investment_agent(company_name: str):
             try:
                 # Fallback to simple analysis
                 simplified_response = investment_analysis_agent.run(
-                    f"Provide a basic investment analysis for {company_name} based on general knowledge."  # noqa: E501
+                    f"Provide a basic investment analysis for {ticker_symbol} based on general knowledge."  # noqa: E501
                 )
                 if (
                     hasattr(simplified_response, "content")
@@ -132,7 +127,7 @@ def investment_agent(company_name: str):
                 ):
                     yield simplified_response.content
                 else:
-                    yield f"Basic analysis completed for {company_name}"
+                    yield f"Basic analysis completed for {ticker_symbol}"
             except Exception as fallback_error:
                 yield f"Unable to complete analysis: {fallback_error}\n"
 
@@ -141,6 +136,12 @@ def investment_agent(company_name: str):
 
 # To test the code through the command line instead of FastAPI
 if __name__ == "__main__":
+    import sys
+    import os
+    
+    # Add the project root to Python path for imports
+    project_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    sys.path.insert(0, project_root)
     import sys
 
     # Check if company name is provided as command line argument
