@@ -5,14 +5,32 @@ from unittest.mock import patch
 import pandas as pd
 import pytest
 
-# Set the environment variable before importing search module
-os.environ["CSV_SPONSORSHIP"] = "test.csv"
 
-# Mock pd.read_csv to prevent actual file reading during import
-with patch("pandas.read_csv") as mock_read_csv:
-    # Return a dummy DataFrame that won't be used (tests will mock skilled_worker_data_current)
-    mock_read_csv.return_value = pd.DataFrame({"Organisation Name": ["dummy"]})
-    from app.services.search import search_companies
+@pytest.fixture(autouse=True)
+def setup_test_environment():
+    """Set up clean test environment with proper cleanup."""
+    # Store original environment state
+    original_env = os.environ.get("CSV_SPONSORSHIP")
+
+    # Set test environment variable
+    os.environ["CSV_SPONSORSHIP"] = "test.csv"
+
+    # Mock pd.read_csv to prevent actual file reading during import
+    with patch("pandas.read_csv") as mock_read_csv:
+        # Return a dummy DataFrame that won't be used (tests will mock skilled_worker_data_current)
+        mock_read_csv.return_value = pd.DataFrame({"Organisation Name": ["dummy"]})
+
+        # Import after setting up the environment
+        global search_companies
+        from app.services.search import search_companies
+
+        yield
+
+    # Cleanup: restore original environment state
+    if original_env is not None:
+        os.environ["CSV_SPONSORSHIP"] = original_env
+    else:
+        os.environ.pop("CSV_SPONSORSHIP", None)
 
 
 @pytest.fixture

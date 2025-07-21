@@ -12,11 +12,11 @@ from app.utils import validate_env_variables
 logger = logging.getLogger(__name__)
 
 # Validate all required environment variables
-(csv_path_env,) = validate_env_variables(["CSV_SPONSORSHIP"])
-logger.info(f"The CSV name is {csv_path_env}")
+(csv_file_name,) = validate_env_variables(["CSV_SPONSORSHIP"])
+logger.info(f"The CSV name is {csv_file_name}")
 # Load CSV into memory at startup
 CSV_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "..", "csv", csv_path_env
+    os.path.dirname(os.path.dirname(__file__)), "..", "csv", csv_file_name
 )
 skilled_worker_data_current = pd.read_csv(CSV_PATH)
 
