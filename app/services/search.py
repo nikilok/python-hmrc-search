@@ -6,10 +6,16 @@ from fuzzywuzzy import fuzz
 from pandas import Series
 
 from app.models import CompanySearchResult
+from app.utils import validate_env_variables
 
+# Validate all required environment variables
+csv_path_env, = validate_env_variables(
+    ["CSV_SPONSORSHIP"]
+)
+print(f"the csv name is {csv_path_env}")
 # Load CSV into memory at startup
 CSV_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "..", "csv", "2025-07-17-Worker.csv"
+    os.path.dirname(os.path.dirname(__file__)), "..", "csv", csv_path_env
 )
 skilled_worker_data_current = pd.read_csv(CSV_PATH)
 
