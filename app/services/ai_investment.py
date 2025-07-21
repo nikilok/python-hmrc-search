@@ -65,7 +65,7 @@ investment_analysis_agent = Agent(
     instructions="Synthesize information from team members, evaluate risks, and "
     "suggest buy/sell/hold recommendations with reasoning",
     markdown=True,
-    show_tool_calls=True
+    show_tool_calls=True,
 )
 
 # Create the main Investment Team Agent that coordinates the specialized agents

@@ -1,5 +1,6 @@
-from typing import List
 import asyncio
+from typing import List
+
 from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
 from fastapi_mcp import FastApiMCP
@@ -28,7 +29,6 @@ def search_company(
 
 
 @app.get("/investment-analysis")
-
 async def get_investment_analysis(
     ticker_symbol: str = Query(
         ..., description="Stock ticker symbol to analyze for investment"
