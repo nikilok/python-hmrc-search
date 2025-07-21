@@ -141,7 +141,6 @@ if __name__ == "__main__":
         os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     )
     sys.path.insert(0, project_root)
-    import sys
 
     # Check if company name is provided as command line argument
     if len(sys.argv) < 2:
