@@ -1,10 +1,18 @@
 import contextlib
+import os
 from unittest.mock import patch
 
 import pandas as pd
 import pytest
 
-from app.services.search import search_companies
+# Set the environment variable before importing search module
+os.environ["CSV_SPONSORSHIP"] = "test.csv"
+
+# Mock pd.read_csv to prevent actual file reading during import
+with patch("pandas.read_csv") as mock_read_csv:
+    # Return a dummy DataFrame that won't be used (tests will mock skilled_worker_data_current)
+    mock_read_csv.return_value = pd.DataFrame({"Organisation Name": ["dummy"]})
+    from app.services.search import search_companies
 
 
 @pytest.fixture
