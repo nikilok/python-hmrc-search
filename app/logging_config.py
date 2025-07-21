@@ -13,7 +13,5 @@ def setup_logging():
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
     )
 
-    logging.getLogger(__name__)
-
 
 setup_logging()
