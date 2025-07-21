@@ -9,7 +9,7 @@ from app.models import CompanySearchResult
 
 # Load CSV into memory at startup
 CSV_PATH = os.path.join(
-    os.path.dirname(os.path.dirname(__file__)), "..", "csv", "2025-07-03-Worker.csv"
+    os.path.dirname(os.path.dirname(__file__)), "..", "csv", "2025-07-17-Worker.csv"
 )
 skilled_worker_data_current = pd.read_csv(CSV_PATH)
 
