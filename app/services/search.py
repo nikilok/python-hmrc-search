@@ -9,14 +9,11 @@ from pandas import Series
 from app.models import CompanySearchResult
 from app.utils import validate_env_variables
 
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logger = logging.getLogger(__name__)
 
 # Validate all required environment variables
 (csv_path_env,) = validate_env_variables(["CSV_SPONSORSHIP"])
-logging.info(f"The CSV name is {csv_path_env}")
+logger.info(f"The CSV name is {csv_path_env}")
 # Load CSV into memory at startup
 CSV_PATH = os.path.join(
     os.path.dirname(os.path.dirname(__file__)), "..", "csv", csv_path_env

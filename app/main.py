@@ -1,14 +1,18 @@
 import asyncio
+import logging
 from typing import List
 
 from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
 from fastapi_mcp import FastApiMCP
 
+from app import logging_config  # noqa: F401
 from app.models import CompanySearchResult
 from app.services.ai_investment import investment_agent
 from app.services.search import search_companies
 from app.utils import lessthan_x
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI()
 mcp = FastApiMCP(app)
