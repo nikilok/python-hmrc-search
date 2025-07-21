@@ -6,11 +6,16 @@ from fastapi import FastAPI, Query
 from fastapi.responses import StreamingResponse
 from fastapi_mcp import FastApiMCP
 
-from app import logging_config  # noqa: F401
-from app.models import CompanySearchResult
-from app.services.ai_investment import investment_agent
-from app.services.search import search_companies
-from app.utils import lessthan_x
+from app.logging_config import setup_logging
+
+# Set up logging FIRST, before importing any app modules that might log
+setup_logging()
+
+# Import app modules after logging is configured
+from app.models import CompanySearchResult  # noqa: E402
+from app.services.ai_investment import investment_agent  # noqa: E402
+from app.services.search import search_companies  # noqa: E402
+from app.utils import lessthan_x  # noqa: E402
 
 logger = logging.getLogger(__name__)
 
